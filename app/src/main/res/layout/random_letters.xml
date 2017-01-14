@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/backgroundPage"
+    android:weightSum="10">
+
+    <Button
+        style="@style/RandomLettersStyle"
+        android:text="L" />
+
+    <Button
+        style="@style/RandomLettersStyle"
+        android:text="S" />
+
+    <Button
+        style="@style/RandomLettersStyle"
+        android:text="K" />
+
+    <Button
+        style="@style/RandomLettersStyle"
+        android:text="Z" />
+
+    <Button
+        style="@style/RandomLettersStyle"
+        android:text="S" />
+
+    <Button
+        style="@style/RandomLettersStyle"
+        android:text="A" />
+
+    <Button
+        style="@style/RandomLettersStyle"
+        android:text="P" />
+
+    <Button
+        style="@style/RandomLettersStyle"
+        android:text="T" />
+
+    <Button
+        style="@style/RandomLettersStyle"
+        android:text="E" />
+
+    <Button
+        style="@style/RandomLettersStyle"
+        android:text="Q" />
+</LinearLayout>
