@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import com.tanoshi.nojiko.animequiz.model.PersoQuestion;
 import com.tanoshi.nojiko.animequiz.model.Ranking;
@@ -23,18 +24,20 @@ import java.util.List;
 public class DbHelper extends SQLiteOpenHelper {
 
     private static String DB_NAME = "AnimeQuiz.db";
-    private static String DB_PATH = "";
+    private static String DB_PATH = ""; //data/data/com.tanoshi.nojiko.animequiz/databases/
     private SQLiteDatabase mDataBase;
     private Context mContext;
 
     public DbHelper(Context context) {
         super(context, DB_NAME, null, 1);
         DB_PATH = context.getApplicationInfo().dataDir+"/databases/";
+        Log.e("DBPATH", DB_PATH+DB_NAME);
         this.mContext = context;
     }
 
     public void openDataBase() {
-        String myPath = DB_PATH+DB_NAME;
+        String myPath = mContext.getDatabasePath(DB_NAME).getPath(); //DB_PATH+DB_NAME;
+        if(mDataBase != null && mDataBase.isOpen()) return;
         mDataBase = SQLiteDatabase.openDatabase(myPath, null, SQLiteDatabase.OPEN_READWRITE);
     }
 
@@ -61,7 +64,7 @@ public class DbHelper extends SQLiteOpenHelper {
     private boolean checkDataBase() {
         SQLiteDatabase tempDB = null;
         try {
-            String myPath = DB_PATH+DB_NAME;
+            String myPath = mContext.getDatabasePath(DB_NAME).getPath(); //DB_PATH+DB_NAME;
             tempDB = SQLiteDatabase.openDatabase(myPath, null, SQLiteDatabase.OPEN_READWRITE);
         } catch (SQLiteException e) {
             e.printStackTrace();
@@ -113,7 +116,7 @@ public class DbHelper extends SQLiteOpenHelper {
             c.moveToFirst();
 
             do{
-                int id = c.getInt(c.getColumnIndex("ID"));
+                int id = c.getInt(c.getColumnIndex("Id"));
                 String image = c.getString(c.getColumnIndex("Image"));
                 String lastName = c.getString(c.getColumnIndex("Lastname"));
                 String firstName = c.getString(c.getColumnIndex("Firstname"));

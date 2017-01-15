@@ -6,11 +6,17 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 
+import com.tanoshi.nojiko.animequiz.dbHelper.DbHelper;
+
+import java.io.IOException;
+
 public class MainActivity extends AppCompatActivity {
 
     private Button game_btn;
     private Button ranking_btn;
     private Button quit_btn;
+
+    private DbHelper db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,6 +27,12 @@ public class MainActivity extends AppCompatActivity {
         this.ranking_btn = (Button) findViewById(R.id.ranking_btn);
         this.quit_btn = (Button) findViewById(R.id.quit_btn);
 
+        this.db = new DbHelper(this);
+        try {
+            this.db.createDataBase();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         this.game_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
