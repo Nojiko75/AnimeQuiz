@@ -258,12 +258,7 @@ public class GameActivity extends AppCompatActivity {
                         //writeAnswerLetter(lastnameLetters);
                         Log.e("WRITE ANSWER LETTER", writeAnswerLetter(lastnameLetters)+"");
                         current_answer_letter.setText(current_btn.getText());
-                        char c = current_btn.getText().charAt(0);
-                        char[] answerChars = answer.toCharArray();
-                        if(answerChars.length > 0) {
-                            answerChars[nbLettersWritten] = c;
-                            answer = String.valueOf(answerChars);
-                        }
+                            answer += current_btn.getText();
                         current_btn.setVisibility(View.INVISIBLE);
                         current_btn.setEnabled(false);
                         nbLettersWritten++;
@@ -281,12 +276,7 @@ public class GameActivity extends AppCompatActivity {
                             Log.e("NB EMPTY", writeAnswerLetter(lastnameLetters)+"");
                             Log.e("WRITE ANSWER LETTER", writeAnswerLetter(firstnameLetters)+"");
                             current_answer_letter.setText(current_btn.getText());
-                            char c = current_btn.getText().charAt(0);
-                            char[] answerChars = answer.toCharArray();
-                            if(answerChars.length > 0) {
-                                answerChars[nbLettersWritten] = c;
-                                answer = String.valueOf(answerChars);
-                            }
+                            answer += current_btn.getText();
                             current_btn.setVisibility(View.INVISIBLE);
                             current_btn.setEnabled(false);
                             nbLettersWritten++;
