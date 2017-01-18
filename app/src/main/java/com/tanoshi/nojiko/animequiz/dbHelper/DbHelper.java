@@ -23,14 +23,14 @@ import java.util.List;
  */
 public class DbHelper extends SQLiteOpenHelper {
 
-    private static String DB_NAME = "AnimeQuiz.db";
-    private static String DB_PATH = ""; //data/data/com.tanoshi.nojiko.animequiz/databases/
+    public static String DB_NAME = "AnimeQuiz.db";
+    public static String DB_PATH = "/data/data/com.tanoshi.nojiko.animequiz/databases/";
     private SQLiteDatabase mDataBase;
     private Context mContext;
 
     public DbHelper(Context context) {
         super(context, DB_NAME, null, 1);
-        DB_PATH = context.getApplicationInfo().dataDir+"/databases/";
+        //DB_PATH = context.getApplicationInfo().dataDir+"/databases/";
         Log.e("DBPATH", DB_PATH+DB_NAME);
         this.mContext = context;
     }
@@ -48,7 +48,7 @@ public class DbHelper extends SQLiteOpenHelper {
             OutputStream myOutput = new FileOutputStream(outputFileName);
 
             byte[] buffer = new byte[1024];
-            int length;
+            int length = 0;
             while((length = myInput.read(buffer)) > 0) {
                 myOutput.write(buffer, 0, length);
             }
