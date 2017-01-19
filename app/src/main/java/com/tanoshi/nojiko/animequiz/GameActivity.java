@@ -21,6 +21,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
@@ -157,6 +158,7 @@ public class GameActivity extends AppCompatActivity {
                 Button myButton = new Button(this);
                 //String s = String.valueOf(lastname.charAt(i));
                 //myButton.setText(s);
+                myButton.setText("");
                 myButton.setTextSize(20);
                 myButton.setTextColor(Color.parseColor("#ffffff"));
                 myButton.setBackgroundResource(R.drawable.answer_letters);
@@ -169,6 +171,7 @@ public class GameActivity extends AppCompatActivity {
                     Button myButton = new Button(this);
                     //String s = String.valueOf(firstname.charAt(i));
                     //myButton.setText(s);
+                    myButton.setText("");
                     myButton.setTextSize(20);
                     myButton.setTextColor(Color.parseColor("#ffffff"));
                     myButton.setBackgroundResource(R.drawable.answer_letters);
@@ -241,9 +244,6 @@ public class GameActivity extends AppCompatActivity {
     }
 
     private void setAnswer() {
-        //answer written by the player
-        String goodAnswer = lastname+firstname;
-
         for(int i=0; i < rdmLettersBtn.size(); i++) {
             final Button current_btn = rdmLettersBtn.get(i);
             final int j = i;
@@ -257,8 +257,9 @@ public class GameActivity extends AppCompatActivity {
                         Button current_answer_letter = (Button) lastname_layout.getChildAt(writeAnswerLetter(lastnameLetters));
                         //writeAnswerLetter(lastnameLetters);
                         Log.e("WRITE ANSWER LETTER", writeAnswerLetter(lastnameLetters)+"");
+                        Log.e("IS EMPTY", isEmpty()+"");
                         current_answer_letter.setText(current_btn.getText());
-                            answer += current_btn.getText();
+                        answer += current_btn.getText();
                         current_btn.setVisibility(View.INVISIBLE);
                         current_btn.setEnabled(false);
                         nbLettersWritten++;
@@ -266,6 +267,11 @@ public class GameActivity extends AppCompatActivity {
                         Log.e("NB LETTER 1", nbLettersWritten+"");
                         Log.e("ANSWER", answer);
                         Log.e("NB EMPTY", writeAnswerLetter(lastnameLetters)+"");
+                        if(checkAnswer()) {
+                            Log.i("CHECK ANSWER", "GOOD");
+                            eraseAnswerCase();
+                            showGame(++index);
+                        }
                     } else if(nbLettersWritten <= lastname_layout.getChildCount() + firstname_layout.getChildCount()){
                         indexTable.add(nbLettersWritten,j);
                         Log.e("INDEX TABLE", j+"");
@@ -273,7 +279,7 @@ public class GameActivity extends AppCompatActivity {
                         Button current_answer_letter = (Button) firstname_layout.getChildAt(writeAnswerLetter(firstnameLetters));
                         //writeAnswerLetter(firstnameLetters);
                         if(current_answer_letter != null) {
-                            Log.e("NB EMPTY", writeAnswerLetter(lastnameLetters)+"");
+                            Log.e("NB EMPTY", writeAnswerLetter(firstnameLetters)+"");
                             Log.e("WRITE ANSWER LETTER", writeAnswerLetter(firstnameLetters)+"");
                             current_answer_letter.setText(current_btn.getText());
                             answer += current_btn.getText();
@@ -284,6 +290,11 @@ public class GameActivity extends AppCompatActivity {
                             Log.e("BUTTON LETTER 2", (String) current_btn.getText());
                             Log.e("NB LETTER 2", nbLettersWritten+"");
                             Log.e("ANSWER", answer);
+                            if(checkAnswer()) {
+                                Log.i("CHECK ANSWER", "GOOD");
+                                eraseAnswerCase();
+                                showGame(++index);
+                            }
                         }
                     }
                 }
@@ -301,7 +312,7 @@ public class GameActivity extends AppCompatActivity {
             answerLetters.add(v);
         }
         int nb = firstname_layout.getChildCount();
-        for(int j=0; j < nbLetters; j++) {
+        for(int j=0; j < nb; j++) {
             v = (Button) firstname_layout.getChildAt(j);
             answerLetters.add(v);
         }
@@ -324,8 +335,8 @@ public class GameActivity extends AppCompatActivity {
                                     Button current_answer_btn = (Button) v;
                                     current_answer_btn.setText("");
                                     nbLettersWritten--;
-                                    //indexTable.remove(l);
-                                    indexTable.add(l, null);
+                                    indexTable.remove(l);
+                                    //indexTable.add(l, null);
                                     writeAnswerLetter(lastnameLetters);
                                     Log.e("NB EMPTY", writeAnswerLetter(lastnameLetters) + "");
                                 }
@@ -338,6 +349,7 @@ public class GameActivity extends AppCompatActivity {
         }
     }
 
+    //return index where letter must to be written into answer
     private int writeAnswerLetter(List<Button> list){
         int i = 0;
         Button answerLetter = null;
@@ -355,13 +367,82 @@ public class GameActivity extends AppCompatActivity {
         return i;
     }
 
-    public void isEmpty() {
-        boolean b;
+    public boolean isEmpty() {
+        boolean b = true;
         for(int i = 0; i < lastnameLetters.size(); i++) {
             b = !TextUtils.isEmpty(lastnameLetters.get(i).getText());
+            return b;
             //Log.e("IS EMPTY", b+"");
         }
 
+        return b;
+    }
+
+    public boolean checkAnswer() {
+        //answer written by the player
+        String goodAnswer = lastname+firstname;
+        Log.i("GOOD ANSWER", goodAnswer);
+        String playerAnswer = "";
+        for(int i=0; i < lastname_layout.getChildCount(); i++) {
+            Button answer_btn = (Button) lastname_layout.getChildAt(i);
+            playerAnswer += answer_btn.getText();
+        }
+
+        for(int i=0; i < firstname_layout.getChildCount(); i++) {
+            Button answer_btn = (Button) firstname_layout.getChildAt(i);
+            playerAnswer += answer_btn.getText();
+        }
+        Log.i("PLAYER ANSWER", playerAnswer);
+        return (playerAnswer.toLowerCase().equals(goodAnswer.toLowerCase()));
+    }
+
+    public void eraseAnswerCase() {
+        lastname_layout.removeAllViews();
+        firstname_layout.removeAllViews();
+
+        Log.i("LASTNAME LAYOUT", lastname_layout.getChildCount()+"");
+        Log.i("FIRSTNAME LAYOUT", firstname_layout.getChildCount()+"");
+
+        removeList(lastnameLetters);
+        removeList(firstnameLetters);
+        removeList(answerLetters);
+
+        Log.i("LASTNAME LETTERS ", lastnameLetters.size()+"");
+        Log.i("FIRSTNAME LETTERS ", firstnameLetters.size()+"");
+        Log.i("ANSWER LETTERS", answerLetters.size()+"");
+        //removeList(indexTable);
+
+        Iterator<Integer> iterator = indexTable.iterator();
+        while(iterator.hasNext()) {
+            Integer integer = iterator.next();
+            iterator.remove();
+        }
+
+        Log.i("INDEX TABLE", indexTable.size()+"");
+
+        for(int i=0; i < rdmLettersBtn.size(); i++) {
+            final Button current_btn = rdmLettersBtn.get(i);
+            if(current_btn.getVisibility() == View.INVISIBLE) {
+                current_btn.setVisibility(View.VISIBLE);
+                current_btn.setEnabled(true);
+            }
+
+        }
+
+        removeList(rdmLettersBtn);
+        Log.i("RANDOM LETTERS", rdmLettersBtn.size()+"");
+        nbLettersWritten = 0;
+        answer = "";
+
+        Log.i("NB LETTERS", nbLettersWritten+"");
+    }
+
+    public void removeList(List list) {
+        Iterator<Button> iterator = list.iterator();
+        while(iterator.hasNext()) {
+            Button button = iterator.next();
+            iterator.remove();
+        }
     }
 
 }
