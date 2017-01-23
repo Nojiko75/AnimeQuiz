@@ -7,6 +7,62 @@
     android:background="@color/backgroundPage"
     tools:context="com.tanoshi.nojiko.animequiz.GameActivity">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:orientation="horizontal"
+        android:background="#C20000">
+
+        <ImageButton
+            android:id="@+id/back_btn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:src="@drawable/back"
+            android:layout_weight="0.75"
+            android:background="@null"
+            android:layout_gravity="center" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"/>
+
+        <TextView
+            android:id="@+id/index"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="1/48"
+            android:layout_weight="1.75"
+            android:textColor="#FFFFFF"
+            android:textSize="24sp"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:background="@drawable/index"/>
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"/>
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:src="@drawable/onigiri"
+            android:layout_weight="0.75"
+            android:layout_gravity="center"/>
+
+        <TextView
+            android:id="@+id/nb_onigiri"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:text="10"
+            android:layout_weight="0.75"
+            android:layout_gravity="center"
+            android:textColor="#FFFFFF"/>
+
+    </LinearLayout>
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -21,8 +77,8 @@
 
             <ImageView
                 android:id="@+id/perso_img"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="230dp"
+                android:layout_height="230dp"
                 android:src="@drawable/akame"
                 android:layout_centerHorizontal="true"
                 android:padding="10dp"/>

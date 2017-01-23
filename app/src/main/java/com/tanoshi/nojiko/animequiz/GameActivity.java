@@ -1,16 +1,21 @@
 package com.tanoshi.nojiko.animequiz;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutCompat;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.tanoshi.nojiko.animequiz.dbHelper.DbHelper;
 import com.tanoshi.nojiko.animequiz.model.PersoQuestion;
@@ -32,6 +37,9 @@ public class GameActivity extends AppCompatActivity {
     private LinearLayout firstname_layout;
     private LinearLayout first_random_letters;
     private LinearLayout second_random_letters;
+    private ImageButton back_btn;
+    private TextView cpt_index;
+    private TextView nb_onigiri;
 
     private List<PersoQuestion> persoQuestionList = new ArrayList<>();
     private List<Ranking> rankingList = new ArrayList<>();
@@ -40,6 +48,7 @@ public class GameActivity extends AppCompatActivity {
     private int totalPerso;
     private String lastname = null;
     private String firstname = null;
+    private String anime = null;
     private String alpha = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     private String randomLetters = null;
     private List<Button> rdmLettersBtn = new ArrayList<>();
@@ -50,6 +59,7 @@ public class GameActivity extends AppCompatActivity {
     private List<Button> lastnameLetters = new ArrayList<>();
     private List<Button> firstnameLetters = new ArrayList<>();
     private String answer = "";
+    private int onigiri = 10;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,8 +71,21 @@ public class GameActivity extends AppCompatActivity {
         firstname_layout = (LinearLayout) findViewById(R.id.firstname_layout);
         first_random_letters = (LinearLayout) findViewById(R.id.first_random_letters);
         second_random_letters = (LinearLayout) findViewById(R.id.second_random_letters);
+        back_btn = (ImageButton) findViewById(R.id.back_btn);
+        cpt_index = (TextView) findViewById(R.id.index);
+        nb_onigiri = (TextView) findViewById(R.id.nb_onigiri);
 
         db = new DbHelper(this);
+
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.hide();
+
+        back_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                comeback();
+            }
+        });
 
         /*File database = getApplicationContext().getDatabasePath(DbHelper.DB_NAME);
         if(false == database.exists()) {
@@ -77,11 +100,12 @@ public class GameActivity extends AppCompatActivity {
             Log.i("DATABASE", "NOT EXIST");
         }*/
 
-        /*persoQuestionList = db.getAllPersoQuestion();
+        persoQuestionList = db.getAllPersoQuestion();
         totalPerso = persoQuestionList.size();
 
-        showGame(index);*/
-
+        showGame(index);
+        cpt_index.setText((index+1) + "/"+ totalPerso);
+        nb_onigiri.setText(onigiri+"");
     }
 
     public boolean copyDataBase(Context context) {
@@ -110,11 +134,6 @@ public class GameActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-
-        persoQuestionList = db.getAllPersoQuestion();
-        totalPerso = persoQuestionList.size();
-
-        showGame(index);
     }
 
     private void showGame(int index) {
@@ -126,6 +145,7 @@ public class GameActivity extends AppCompatActivity {
             lastname = persoQuestion.getLastName();
             //firstname = "";
             firstname = persoQuestion.getFirstName();
+            anime = persoQuestion.getAnime();
 
             setAnswerCaseLetters();
             Log.i("LASTNAME", lastname);
@@ -269,8 +289,7 @@ public class GameActivity extends AppCompatActivity {
                         Log.e("NB EMPTY", writeAnswerLetter(lastnameLetters)+"");
                         if(checkAnswer()) {
                             Log.i("CHECK ANSWER", "GOOD");
-                            eraseAnswerCase();
-                            showGame(++index);
+                            showSuccessDialog();
                         }
                     } else if(nbLettersWritten <= lastname_layout.getChildCount() + firstname_layout.getChildCount()){
                         indexTable.add(nbLettersWritten,j);
@@ -292,8 +311,7 @@ public class GameActivity extends AppCompatActivity {
                             Log.e("ANSWER", answer);
                             if(checkAnswer()) {
                                 Log.i("CHECK ANSWER", "GOOD");
-                                eraseAnswerCase();
-                                showGame(++index);
+                                showSuccessDialog();
                             }
                         }
                     }
@@ -443,6 +461,39 @@ public class GameActivity extends AppCompatActivity {
             Button button = iterator.next();
             iterator.remove();
         }
+    }
+
+    public void showSuccessDialog() {
+        Log.i("DIALOG", "SHOWING");
+        final Dialog dialog = new Dialog(this);
+        dialog.setContentView(R.layout.success_dialog);
+        dialog.setTitle("Trouvé !");
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        TextView perso_name = (TextView) dialog.findViewById(R.id.perso_name);
+        TextView perso_manga = (TextView) dialog.findViewById(R.id.perso_manga);
+        Button next_btn = (Button) dialog.findViewById(R.id.next_btn);
+
+        perso_name.setText(lastname + " " + firstname);
+        perso_manga.setText(anime);
+
+        next_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                eraseAnswerCase();
+                dialog.dismiss();
+                showGame(++index);
+                cpt_index.setText((index+1) + "/"+ totalPerso);
+                onigiri += 5;
+                nb_onigiri.setText(onigiri+"");
+            }
+        });
+
+        dialog.show();
+    }
+
+    public void comeback() {
+        finish();
     }
 
 }

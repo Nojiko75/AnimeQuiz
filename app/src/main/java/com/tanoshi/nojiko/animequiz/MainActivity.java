@@ -2,6 +2,7 @@ package com.tanoshi.nojiko.animequiz;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
@@ -23,6 +24,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.hide();
+
         this.game_btn = (Button) findViewById(R.id.game_btn);
         this.ranking_btn = (Button) findViewById(R.id.ranking_btn);
         this.quit_btn = (Button) findViewById(R.id.quit_btn);
@@ -38,7 +42,6 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), GameActivity.class);
                 startActivity(intent);
-                finish();
             }
         });
 
@@ -47,7 +50,6 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), RankingActivity.class);
                 startActivity(intent);
-                finish();
             }
         });
 

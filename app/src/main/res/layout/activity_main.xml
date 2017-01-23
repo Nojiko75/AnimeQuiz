@@ -7,6 +7,25 @@
     android:background="@color/backgroundPage"
     tools:context="com.tanoshi.nojiko.animequiz.MainActivity">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:orientation="horizontal"
+        android:background="#C20000"
+        android:gravity="center">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="AnimeQuiz"
+            android:textSize="24sp"
+            android:layout_gravity="center"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            />
+
+    </LinearLayout>
+
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="0dp"
