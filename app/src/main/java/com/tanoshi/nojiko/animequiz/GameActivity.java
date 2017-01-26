@@ -40,6 +40,8 @@ public class GameActivity extends AppCompatActivity {
     private ImageButton back_btn;
     private TextView cpt_index;
     private TextView nb_onigiri;
+    private Button clueBonus_btn;
+    private Button nextBonus_btn;
 
     private List<PersoQuestion> persoQuestionList = new ArrayList<>();
     private List<Ranking> rankingList = new ArrayList<>();
@@ -52,12 +54,14 @@ public class GameActivity extends AppCompatActivity {
     private String alpha = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     private String randomLetters = null;
     private List<Button> rdmLettersBtn = new ArrayList<>();
+    //dictionnary
     private List<Integer> indexTable = new ArrayList<>(); //get random letters button indexes to display them
     private int nbLettersWritten = 0;
     private int cpt = 0;
     private List<Button> answerLetters = new ArrayList<>();
     private List<Button> lastnameLetters = new ArrayList<>();
     private List<Button> firstnameLetters = new ArrayList<>();
+    private List<Button> nameLetters = new ArrayList<>();
     private String answer = "";
     private int onigiri = 10;
 
@@ -74,6 +78,8 @@ public class GameActivity extends AppCompatActivity {
         back_btn = (ImageButton) findViewById(R.id.back_btn);
         cpt_index = (TextView) findViewById(R.id.index);
         nb_onigiri = (TextView) findViewById(R.id.nb_onigiri);
+        clueBonus_btn = (Button) findViewById(R.id.clueBonus_btn);
+        nextBonus_btn = (Button) findViewById(R.id.nextBonus_btn);
 
         db = new DbHelper(this);
 
@@ -84,6 +90,22 @@ public class GameActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 comeback();
+            }
+        });
+
+        clueBonus_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showBonusDialog(false);
+                updateBonusBtn();
+            }
+        });
+
+        nextBonus_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showBonusDialog(true);
+                updateBonusBtn();
             }
         });
 
@@ -143,6 +165,7 @@ public class GameActivity extends AppCompatActivity {
             perso_img.setImageResource(imageId);
 
             lastname = persoQuestion.getLastName();
+            lastname = lastname.replace(".", "");
             //firstname = "";
             firstname = persoQuestion.getFirstName();
             anime = persoQuestion.getAnime();
@@ -171,20 +194,37 @@ public class GameActivity extends AppCompatActivity {
             int nbLettersLN = lastname.length();
             int nbLettersFN = firstname.length();
 
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(150, LinearLayoutCompat.LayoutParams.WRAP_CONTENT);
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(130, LinearLayoutCompat.LayoutParams.WRAP_CONTENT);
             params.setMargins(4, 0, 4, 0); //left, top, right, bottom
+            LinearLayout.LayoutParams params_space = new LinearLayout.LayoutParams(130, LinearLayoutCompat.LayoutParams.WRAP_CONTENT);
+            params_space.setMargins(4, 0, 134, 0); //left, top, right, bottom
             Log.i("SIZE", nbLettersLN+"");
             for(int i=0; i<nbLettersLN; i++) {
-                Button myButton = new Button(this);
-                //String s = String.valueOf(lastname.charAt(i));
-                //myButton.setText(s);
-                myButton.setText("");
-                myButton.setTextSize(20);
-                myButton.setTextColor(Color.parseColor("#ffffff"));
-                myButton.setBackgroundResource(R.drawable.answer_letters);
-                myButton.setLayoutParams(params);
-                lastname_layout.addView(myButton);
-                lastnameLetters.add(myButton);
+                if(!Character.toString(lastname.charAt(i)).matches(" ")) {
+                    Button myButton = new Button(this);
+                    //String s = String.valueOf(lastname.charAt(i));
+                    //myButton.setText(s);
+                    myButton.setText("");
+                    myButton.setTextSize(20);
+                    myButton.setTextColor(Color.parseColor("#ffffff"));
+
+                    if(i < nbLettersLN-1 && Character.toString(lastname.charAt(i+1)).matches(" ")) {
+                        //myButton.setBackgroundColor(Color.parseColor("#1F2A36"));
+                        //myButton.setBackgroundResource(R.drawable.random_letters);
+                        myButton.setLayoutParams(params_space);
+                        Log.i("i", "je suis un i");
+                        //myButton.setEnabled(false);
+
+                    } else {
+                        myButton.setLayoutParams(params);
+                    }
+
+                    myButton.setBackgroundResource(R.drawable.answer_letters);
+                    lastname_layout.addView(myButton);
+                    lastnameLetters.add(myButton);
+                    nameLetters.add(myButton);
+                }
+
             }
             if(nbLettersFN > 0) {
                 for(int i=0; i<nbLettersFN; i++) {
@@ -198,6 +238,7 @@ public class GameActivity extends AppCompatActivity {
                     myButton.setLayoutParams(params);
                     firstname_layout.addView(myButton);
                     firstnameLetters.add(myButton);
+                    nameLetters.add(myButton);
                 }
             }
 
@@ -223,9 +264,10 @@ public class GameActivity extends AppCompatActivity {
     }
 
     private void setRandomLetters() {
-        int length = 20 - (lastname.length() + firstname.length());
+        String clean_lastname = lastname.replace(" ", "");
+        int length = 20 - (clean_lastname.length() + firstname.length());
         Log.e("RANDOM LENGTH", length+"");
-        String randomStr = lastname + firstname;
+        String randomStr = clean_lastname + firstname;
         for(int i=0; i < length; i++) {
             randomStr += selectAChar(alpha);
         }
@@ -270,33 +312,34 @@ public class GameActivity extends AppCompatActivity {
             current_btn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(nbLettersWritten < lastname_layout.getChildCount()) {
-                        indexTable.add(nbLettersWritten,j);
-                        Log.e("INDEX TABLE", j+"");
+                    //if empty letter is in lastname
+                    //if(nbLettersWritten < lastname_layout.getChildCount()) {
+                    if(isEmpty(lastnameLetters)) {
+                        indexTable.add(nbLettersWritten, j);
+                        Log.e("INDEX TABLE", j + "");
                         //Button current_answer_letter = (Button) lastname_layout.getChildAt(nbLettersWritten);
                         Button current_answer_letter = (Button) lastname_layout.getChildAt(writeAnswerLetter(lastnameLetters));
-                        //writeAnswerLetter(lastnameLetters);
-                        Log.e("WRITE ANSWER LETTER", writeAnswerLetter(lastnameLetters)+"");
-                        Log.e("IS EMPTY", isEmpty()+"");
+                        Log.e("WRITE ANSWER LETTER", writeAnswerLetter(lastnameLetters) + "");
+                        Log.e("IS EMPTY", isEmpty(lastnameLetters) + "");
                         current_answer_letter.setText(current_btn.getText());
                         answer += current_btn.getText();
                         current_btn.setVisibility(View.INVISIBLE);
                         current_btn.setEnabled(false);
                         nbLettersWritten++;
                         Log.e("BUTTON LETTER 1", (String) current_btn.getText());
-                        Log.e("NB LETTER 1", nbLettersWritten+"");
+                        Log.e("NB LETTER 1", nbLettersWritten + "");
                         Log.e("ANSWER", answer);
-                        Log.e("NB EMPTY", writeAnswerLetter(lastnameLetters)+"");
-                        if(checkAnswer()) {
+                        Log.e("NB EMPTY", writeAnswerLetter(lastnameLetters) + "");
+                        if (checkAnswer()) {
                             Log.i("CHECK ANSWER", "GOOD");
-                            showSuccessDialog();
+                            showSuccessDialog(true);
                         }
-                    } else if(nbLettersWritten <= lastname_layout.getChildCount() + firstname_layout.getChildCount()){
+                        //} else if(nbLettersWritten <= lastname_layout.getChildCount() + firstname_layout.getChildCount()){
+                    }else {
                         indexTable.add(nbLettersWritten,j);
                         Log.e("INDEX TABLE", j+"");
                         //Button current_answer_letter = (Button) firstname_layout.getChildAt(cpt);
                         Button current_answer_letter = (Button) firstname_layout.getChildAt(writeAnswerLetter(firstnameLetters));
-                        //writeAnswerLetter(firstnameLetters);
                         if(current_answer_letter != null) {
                             Log.e("NB EMPTY", writeAnswerLetter(firstnameLetters)+"");
                             Log.e("WRITE ANSWER LETTER", writeAnswerLetter(firstnameLetters)+"");
@@ -311,7 +354,7 @@ public class GameActivity extends AppCompatActivity {
                             Log.e("ANSWER", answer);
                             if(checkAnswer()) {
                                 Log.i("CHECK ANSWER", "GOOD");
-                                showSuccessDialog();
+                                showSuccessDialog(true);
                             }
                         }
                     }
@@ -355,7 +398,6 @@ public class GameActivity extends AppCompatActivity {
                                     nbLettersWritten--;
                                     indexTable.remove(l);
                                     //indexTable.add(l, null);
-                                    writeAnswerLetter(lastnameLetters);
                                     Log.e("NB EMPTY", writeAnswerLetter(lastnameLetters) + "");
                                 }
                             }
@@ -385,20 +427,27 @@ public class GameActivity extends AppCompatActivity {
         return i;
     }
 
-    public boolean isEmpty() {
+    public boolean isEmpty(List<Button> list) {
         boolean b = true;
-        for(int i = 0; i < lastnameLetters.size(); i++) {
+        /*for(int i = 0; i < lastnameLetters.size(); i++) {
             b = !TextUtils.isEmpty(lastnameLetters.get(i).getText());
+            Log.i("IS EMPTY 1", b+"");
             return b;
-            //Log.e("IS EMPTY", b+"");
         }
 
-        return b;
+        return b;*/
+        int i = 0;
+        while (i < list.size() && !TextUtils.isEmpty(list.get(i).getText())) {
+            i++;
+        }
+
+        return i < list.size();
     }
 
     public boolean checkAnswer() {
         //answer written by the player
         String goodAnswer = lastname+firstname;
+        goodAnswer = goodAnswer.replace(" ", "");
         Log.i("GOOD ANSWER", goodAnswer);
         String playerAnswer = "";
         for(int i=0; i < lastname_layout.getChildCount(); i++) {
@@ -463,16 +512,26 @@ public class GameActivity extends AppCompatActivity {
         }
     }
 
-    public void showSuccessDialog() {
-        Log.i("DIALOG", "SHOWING");
+    public void showSuccessDialog(final boolean success) {
         final Dialog dialog = new Dialog(this);
         dialog.setContentView(R.layout.success_dialog);
-        dialog.setTitle("Trouvé !");
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
+        TextView title = (TextView) dialog.findViewById(R.id.title) ;
+        TextView result_st = (TextView) dialog.findViewById(R.id.result_st);
+        ImageView result_img = (ImageView) dialog.findViewById(R.id.result_img);
         TextView perso_name = (TextView) dialog.findViewById(R.id.perso_name);
         TextView perso_manga = (TextView) dialog.findViewById(R.id.perso_manga);
         Button next_btn = (Button) dialog.findViewById(R.id.next_btn);
+
+        if(!success) {
+            title.setText("Dommage...");
+            result_st.setText("Le personnage était:");
+            int imageResource = getResources().getIdentifier("disappointed", "drawable", getPackageName());
+            result_img.setImageResource(imageResource);
+            onigiri-=10;
+            nb_onigiri.setText(onigiri+"");
+        }
 
         perso_name.setText(lastname + " " + firstname);
         perso_manga.setText(anime);
@@ -484,8 +543,11 @@ public class GameActivity extends AppCompatActivity {
                 dialog.dismiss();
                 showGame(++index);
                 cpt_index.setText((index+1) + "/"+ totalPerso);
-                onigiri += 5;
-                nb_onigiri.setText(onigiri+"");
+                if(success) {
+                    onigiri +=5;
+                    nb_onigiri.setText(onigiri+"");
+                }
+                updateBonusBtn();
             }
         });
 
@@ -494,6 +556,87 @@ public class GameActivity extends AppCompatActivity {
 
     public void comeback() {
         finish();
+    }
+
+    public void showBonusDialog(final boolean isNextBonus) {
+        final Dialog dialog = new Dialog(this);
+        dialog.setContentView(R.layout.bonus_dialog);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        TextView title = (TextView) dialog.findViewById(R.id.title);
+        TextView question = (TextView) dialog.findViewById(R.id.question);
+        TextView bonus_cost = (TextView) dialog.findViewById(R.id.bonus_cost);
+        Button ok_btn = (Button) dialog.findViewById(R.id.ok_btn);
+        Button close_btn = (Button) dialog.findViewById(R.id.close_btn);
+
+        if(isNextBonus) {
+            title.setText("Passer");
+            question.setText("Passer au personnage suivant ?");
+            bonus_cost.setText("10");
+        }
+
+        ok_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(isNextBonus) {
+                    showSuccessDialog(false);
+                    dialog.dismiss();
+                } else {
+                    writeClueLetter();
+                    dialog.dismiss();
+                }
+                updateBonusBtn();
+            }
+        });
+
+        close_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
+    }
+
+    public void writeClueLetter() {
+        if(isEmpty(lastnameLetters)) {
+            int index = writeAnswerLetter(lastnameLetters);
+            Button current_answer_letter = (Button) lastname_layout.getChildAt(index);
+            current_answer_letter.setText(lastname.charAt(index)+"");
+        } else {
+            int index = writeAnswerLetter(firstnameLetters);
+            Button current_answer_letter = (Button) firstname_layout.getChildAt(index);
+            current_answer_letter.setText(firstname.charAt(index)+"");
+        }
+        onigiri -=5;
+        nb_onigiri.setText(onigiri+"");
+        if(checkAnswer()) {
+            Log.i("CHECK ANSWER", "GOOD");
+            showSuccessDialog(true);
+        }
+    }
+
+    public void updateBonusBtn() {
+        if(onigiri < 5) {
+            clueBonus_btn.setBackgroundResource(R.drawable.enabled_btn);
+            clueBonus_btn.setPadding(40, 0, 0, 0);
+            clueBonus_btn.setEnabled(false);
+        } else {
+            clueBonus_btn.setBackgroundResource(R.drawable.game_btn);
+            clueBonus_btn.setPadding(40, 0, 0, 0);
+            clueBonus_btn.setEnabled(true);
+        }
+
+        if(onigiri < 10) {
+            nextBonus_btn.setBackgroundResource(R.drawable.enabled_btn);
+            nextBonus_btn.setPadding(0, 0, 40, 0);
+            nextBonus_btn.setEnabled(false);
+        } else {
+            nextBonus_btn.setBackgroundResource(R.drawable.game_btn);
+            nextBonus_btn.setPadding(0, 0, 40, 0);
+            nextBonus_btn.setEnabled(true);
+        }
     }
 
 }

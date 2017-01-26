@@ -2,6 +2,10 @@
 <resources>
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#B20000</color>
+    <color name="closeBtn">#C20000</color>
+    <color name="colorDarkRed">#A00000</color>
     <color name="colorAccent">#FF4081</color>
+    <color name="greenBtn">#8FCF3C</color>
+    <color name="enabledBtn">#AED083</color>
     <color name="backgroundPage">#1F2A36</color> <!-- #242E38 -->
 </resources>
