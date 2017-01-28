@@ -8,8 +8,7 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity
-            android:name=".MainActivity">
+        <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -17,7 +16,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".GameActivity" />
-        <activity android:name=".RankingActivity"></activity>
+        <activity android:name=".RankingActivity" />
+        <activity android:name=".DoneActivity"></activity>
     </application>
 
 </manifest>

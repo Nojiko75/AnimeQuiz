@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/backgroundPage"
+    tools:context="com.tanoshi.nojiko.animequiz.DoneActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:orientation="horizontal"
+        android:background="#C20000"
+        android:gravity="center">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="AnimeQuiz"
+            android:textSize="24sp"
+            android:layout_gravity="center"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="270dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_gravity="center"
+        android:background="@drawable/custom_dialog"
+        android:layout_centerInParent="true">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Félicitation !"
+            android:layout_gravity="center"
+            android:textSize="30sp"
+            android:textStyle="bold"
+            android:textColor="#8CC6D7"
+            android:gravity="center"
+            android:paddingTop="5dp" />
+
+        <View
+            android:layout_width="120dp"
+            android:layout_height="1dp"
+            android:background="#74A6B5"
+            android:layout_gravity="center"
+            android:layout_marginBottom="10dp"/>
+
+        <ImageView
+            android:id="@+id/result_img"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/finish_game"
+            android:layout_gravity="center"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Vous avez terminé le jeu !"
+            android:layout_gravity="center"
+            android:textSize="16sp"
+            android:layout_marginTop="10dp"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:textColor="#000"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Nombre de personnages trouvés:"
+            android:layout_gravity="center"
+            android:textSize="16sp"
+            android:layout_marginTop="10dp"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:textColor="#000"/>
+
+        <TextView
+            android:id="@+id/nb_perso"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="48/48"
+            android:layout_gravity="center"
+            android:textSize="20sp"
+            android:textColor="#000"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Score:"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            android:textSize="16sp"
+            android:textColor="#000"/>
+
+        <TextView
+            android:id="@+id/score"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="48"
+            android:layout_gravity="center"
+            android:textSize="20sp"
+            android:layout_marginBottom="10dp"
+            android:textColor="#000"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginTop="5dp">
+
+            <Button
+                android:id="@+id/retry_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/ok_btn"
+                android:text="Rejouer"
+                android:textSize="20sp"
+                android:layout_gravity="center"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginRight="20dp"
+                android:textColor="#FFFFFF"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"/>
+
+            <Button
+                android:id="@+id/back_home_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/close_btn"
+                android:text="Accueil"
+                android:textSize="20sp"
+                android:layout_gravity="center"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="10dp"
+                android:textColor="#FFFFFF"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"/>
+        </LinearLayout>
+    </LinearLayout>
+
+</RelativeLayout>

@@ -2,6 +2,7 @@ package com.tanoshi.nojiko.animequiz;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -42,6 +43,7 @@ public class GameActivity extends AppCompatActivity {
     private TextView nb_onigiri;
     private Button clueBonus_btn;
     private Button nextBonus_btn;
+    private TextView score_txtview;
 
     private List<PersoQuestion> persoQuestionList = new ArrayList<>();
     private List<Ranking> rankingList = new ArrayList<>();
@@ -64,6 +66,9 @@ public class GameActivity extends AppCompatActivity {
     private List<Button> nameLetters = new ArrayList<>();
     private String answer = "";
     private int onigiri = 10;
+    private int score = 0;
+    private boolean bonusUsed = false;
+    private int nb_persoFounded = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,6 +85,7 @@ public class GameActivity extends AppCompatActivity {
         nb_onigiri = (TextView) findViewById(R.id.nb_onigiri);
         clueBonus_btn = (Button) findViewById(R.id.clueBonus_btn);
         nextBonus_btn = (Button) findViewById(R.id.nextBonus_btn);
+        score_txtview = (TextView) findViewById(R.id.score);
 
         db = new DbHelper(this);
 
@@ -125,9 +131,12 @@ public class GameActivity extends AppCompatActivity {
         persoQuestionList = db.getAllPersoQuestion();
         totalPerso = persoQuestionList.size();
 
+        Log.i("BONUS 1", bonusUsed+"");
         showGame(index);
+        Log.i("BONUS 2", bonusUsed+"");
         cpt_index.setText((index+1) + "/"+ totalPerso);
         nb_onigiri.setText(onigiri+"");
+        score_txtview.setText(score+"");
     }
 
     public boolean copyDataBase(Context context) {
@@ -330,6 +339,7 @@ public class GameActivity extends AppCompatActivity {
                         Log.e("NB LETTER 1", nbLettersWritten + "");
                         Log.e("ANSWER", answer);
                         Log.e("NB EMPTY", writeAnswerLetter(lastnameLetters) + "");
+                        Log.i("BONUS 6", bonusUsed+"");
                         if (checkAnswer()) {
                             Log.i("CHECK ANSWER", "GOOD");
                             showSuccessDialog(true);
@@ -500,7 +510,7 @@ public class GameActivity extends AppCompatActivity {
         Log.i("RANDOM LETTERS", rdmLettersBtn.size()+"");
         nbLettersWritten = 0;
         answer = "";
-
+        Log.i("BONUS 3", bonusUsed+"");
         Log.i("NB LETTERS", nbLettersWritten+"");
     }
 
@@ -531,6 +541,7 @@ public class GameActivity extends AppCompatActivity {
             result_img.setImageResource(imageResource);
             onigiri-=10;
             nb_onigiri.setText(onigiri+"");
+            cpt_index.setText((index+1) + "/"+ totalPerso);
         }
 
         perso_name.setText(lastname + " " + firstname);
@@ -541,11 +552,31 @@ public class GameActivity extends AppCompatActivity {
             public void onClick(View v) {
                 eraseAnswerCase();
                 dialog.dismiss();
-                showGame(++index);
-                cpt_index.setText((index+1) + "/"+ totalPerso);
                 if(success) {
                     onigiri +=5;
                     nb_onigiri.setText(onigiri+"");
+                    if(bonusUsed) {
+                        score += 1;
+                    } else {
+                        score += 3;
+                    }
+                    Log.i("BONUS 4", bonusUsed+"");
+                    nb_persoFounded++;
+                    score_txtview.setText(score+"");
+                }
+                ++index;
+                //index += 24;
+                cpt_index.setText((index+1) + "/"+ totalPerso);
+                bonusUsed = false;
+                if(index < totalPerso) {
+                    showGame(index);
+                } else {
+                    Intent intent = new Intent(getApplicationContext(), DoneActivity.class);
+                    intent.putExtra("SCORE", score);
+                    intent.putExtra("NB_PERSO", nb_persoFounded);
+                    intent.putExtra("NB_PERSO_TOTAL", totalPerso);
+                    startActivity(intent);
+                    finish();
                 }
                 updateBonusBtn();
             }
@@ -578,6 +609,7 @@ public class GameActivity extends AppCompatActivity {
         ok_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                bonusUsed = true;
                 if(isNextBonus) {
                     showSuccessDialog(false);
                     dialog.dismiss();
@@ -610,6 +642,7 @@ public class GameActivity extends AppCompatActivity {
             current_answer_letter.setText(firstname.charAt(index)+"");
         }
         onigiri -=5;
+        Log.i("BONUS 5", bonusUsed+"");
         nb_onigiri.setText(onigiri+"");
         if(checkAnswer()) {
             Log.i("CHECK ANSWER", "GOOD");
