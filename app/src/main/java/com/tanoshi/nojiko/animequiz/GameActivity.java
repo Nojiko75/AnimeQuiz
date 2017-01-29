@@ -27,6 +27,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
@@ -56,7 +57,9 @@ public class GameActivity extends AppCompatActivity {
     private String alpha = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     private String randomLetters = null;
     private List<Button> rdmLettersBtn = new ArrayList<>();
-    //dictionnary
+    //dictionnary key: index of lastname or firstname position - value: index of random letter position
+    private HashMap<Integer, Integer> hashMapL = new HashMap<>();
+    private HashMap<Integer, Integer> hashMapF = new HashMap<>();
     private List<Integer> indexTable = new ArrayList<>(); //get random letters button indexes to display them
     private int nbLettersWritten = 0;
     private int cpt = 0;
@@ -324,7 +327,8 @@ public class GameActivity extends AppCompatActivity {
                     //if empty letter is in lastname
                     //if(nbLettersWritten < lastname_layout.getChildCount()) {
                     if(isEmpty(lastnameLetters)) {
-                        indexTable.add(nbLettersWritten, j);
+                        //indexTable.add(nbLettersWritten, j);
+                        hashMapL.put(writeAnswerLetter(lastnameLetters), j);
                         Log.e("INDEX TABLE", j + "");
                         //Button current_answer_letter = (Button) lastname_layout.getChildAt(nbLettersWritten);
                         Button current_answer_letter = (Button) lastname_layout.getChildAt(writeAnswerLetter(lastnameLetters));
@@ -346,7 +350,8 @@ public class GameActivity extends AppCompatActivity {
                         }
                         //} else if(nbLettersWritten <= lastname_layout.getChildCount() + firstname_layout.getChildCount()){
                     }else {
-                        indexTable.add(nbLettersWritten,j);
+                        //indexTable.add(nbLettersWritten,j);
+                        hashMapF.put(writeAnswerLetter(firstnameLetters), j);
                         Log.e("INDEX TABLE", j+"");
                         //Button current_answer_letter = (Button) firstname_layout.getChildAt(cpt);
                         Button current_answer_letter = (Button) firstname_layout.getChildAt(writeAnswerLetter(firstnameLetters));
@@ -376,46 +381,65 @@ public class GameActivity extends AppCompatActivity {
     //remove answer letter and display random letter
     public void displayRandomLetters() {
 
-        int nbLetters = lastname_layout.getChildCount();
+        int nbLettersL = lastname_layout.getChildCount();
         Button v = null;
-        for(int i=0; i < nbLetters; i++) {
-            v = (Button) lastname_layout.getChildAt(i);
-            answerLetters.add(v);
-        }
-        int nb = firstname_layout.getChildCount();
-        for(int j=0; j < nb; j++) {
-            v = (Button) firstname_layout.getChildAt(j);
-            answerLetters.add(v);
-        }
 
-        for(int k=0; k < answerLetters.size(); k++) {
-            Button current_btn = answerLetters.get(k);
-
-            final int l = k;
-            if(current_btn != null) {
-                current_btn.setOnClickListener(new View.OnClickListener() {
+        for(int i = 0; i < lastnameLetters.size(); i++) {
+            Button button = lastnameLetters.get(i);
+            if(button != null) {
+                final int j = i;
+                button.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if(indexTable.size() > 0) {
-                            if(!TextUtils.isEmpty(answerLetters.get(l).getText())) {
-                                if (indexTable.get(l) != null) {
-                                    Button current_rdm_btn = rdmLettersBtn.get(indexTable.get(l));
-                                    current_rdm_btn.setVisibility(View.VISIBLE);
-                                    current_rdm_btn.setEnabled(true);
-
-                                    Button current_answer_btn = (Button) v;
-                                    current_answer_btn.setText("");
-                                    nbLettersWritten--;
-                                    indexTable.remove(l);
-                                    //indexTable.add(l, null);
-                                    Log.e("NB EMPTY", writeAnswerLetter(lastnameLetters) + "");
+                        Button current_btn = (Button) v;
+                        if(!TextUtils.isEmpty(current_btn.getText())) {
+                            int index = 0;
+                            Iterator<Integer> iterator = hashMapL.keySet().iterator();
+                            while(iterator.hasNext()) {
+                                Integer key = iterator.next();
+                                Integer value = hashMapL.get(key);
+                                if(key == j) {
+                                    index = value;
                                 }
                             }
+                            current_btn.setText("");
+                            Button rdmButton = rdmLettersBtn.get(index);
+                            rdmButton.setVisibility(View.VISIBLE);
+                            rdmButton.setEnabled(true);
+                            nbLettersWritten--;
                         }
                     }
                 });
             }
+        }
 
+        for(int i = 0; i < firstnameLetters.size(); i++) {
+            Button button = firstnameLetters.get(i);
+            if(button != null) {
+                final int j = i;
+                button.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Button current_btn = (Button) v;
+                        if(!TextUtils.isEmpty(current_btn.getText())) {
+                            int index = 0;
+                            Iterator<Integer> iterator = hashMapF.keySet().iterator();
+                            while(iterator.hasNext()) {
+                                Integer key = iterator.next();
+                                Integer value = hashMapF.get(key);
+                                if(key == j) {
+                                    index = value;
+                                }
+                            }
+                            current_btn.setText("");
+                            Button rdmButton = rdmLettersBtn.get(index);
+                            rdmButton.setVisibility(View.VISIBLE);
+                            rdmButton.setEnabled(true);
+                            nbLettersWritten--;
+                        }
+                    }
+                });
+            }
         }
     }
 
@@ -636,10 +660,15 @@ public class GameActivity extends AppCompatActivity {
             int index = writeAnswerLetter(lastnameLetters);
             Button current_answer_letter = (Button) lastname_layout.getChildAt(index);
             current_answer_letter.setText(lastname.charAt(index)+"");
+            //erase random letter
+            //eraseRdmLetterBonus(index, lastname);
         } else {
             int index = writeAnswerLetter(firstnameLetters);
             Button current_answer_letter = (Button) firstname_layout.getChildAt(index);
             current_answer_letter.setText(firstname.charAt(index)+"");
+
+            //erase random letter
+            //eraseRdmLetterBonus(index, firstname);
         }
         onigiri -=5;
         Log.i("BONUS 5", bonusUsed+"");
@@ -670,6 +699,16 @@ public class GameActivity extends AppCompatActivity {
             nextBonus_btn.setPadding(0, 0, 40, 0);
             nextBonus_btn.setEnabled(true);
         }
+    }
+
+    public void eraseRdmLetterBonus(int index, String name) {
+        int i = 0;
+        while(i < rdmLettersBtn.size() && !rdmLettersBtn.get(i).getText().equals(name.charAt(index))) {
+            i++;
+        }
+        indexTable.add(nbLettersWritten,i);
+        rdmLettersBtn.get(i).setVisibility(View.INVISIBLE);
+        rdmLettersBtn.get(i).setEnabled(false);
     }
 
 }
