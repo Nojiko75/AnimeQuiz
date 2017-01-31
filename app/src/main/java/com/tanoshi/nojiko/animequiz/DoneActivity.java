@@ -1,6 +1,7 @@
 package com.tanoshi.nojiko.animequiz;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -16,6 +17,8 @@ public class DoneActivity extends AppCompatActivity {
     private TextView score_txtView;
     private Button retry_btn;
     private Button back_home_btn;
+
+    public static final String PREFS_NAME = "SaveGame";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,5 +62,13 @@ public class DoneActivity extends AppCompatActivity {
                 finish();
             }
         });
+
+        //restart game
+        SharedPreferences preferences = getSharedPreferences(PREFS_NAME, 0);
+        SharedPreferences.Editor editor = preferences.edit();
+
+        editor.remove("SCORE");
+        editor.remove("PROGRESS");
+        editor.remove("NB_PERSO");
     }
 }

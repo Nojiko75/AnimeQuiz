@@ -3,6 +3,7 @@ package com.tanoshi.nojiko.animequiz;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -73,6 +74,8 @@ public class GameActivity extends AppCompatActivity {
     private boolean bonusUsed = false;
     private int nb_persoFounded = 0;
 
+    public static final String PREFS_NAME = "SaveGame";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -94,6 +97,8 @@ public class GameActivity extends AppCompatActivity {
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.hide();
+
+        restoreGame();
 
         back_btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -168,6 +173,12 @@ public class GameActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        saveGame();
     }
 
     private void showGame(int index) {
@@ -462,14 +473,6 @@ public class GameActivity extends AppCompatActivity {
     }
 
     public boolean isEmpty(List<Button> list) {
-        boolean b = true;
-        /*for(int i = 0; i < lastnameLetters.size(); i++) {
-            b = !TextUtils.isEmpty(lastnameLetters.get(i).getText());
-            Log.i("IS EMPTY 1", b+"");
-            return b;
-        }
-
-        return b;*/
         int i = 0;
         while (i < list.size() && !TextUtils.isEmpty(list.get(i).getText())) {
             i++;
@@ -655,20 +658,16 @@ public class GameActivity extends AppCompatActivity {
         dialog.show();
     }
 
+    //write the clue letter where the first letter is empty into the text of last or firstname buttons
     public void writeClueLetter() {
         if(isEmpty(lastnameLetters)) {
             int index = writeAnswerLetter(lastnameLetters);
             Button current_answer_letter = (Button) lastname_layout.getChildAt(index);
             current_answer_letter.setText(lastname.charAt(index)+"");
-            //erase random letter
-            //eraseRdmLetterBonus(index, lastname);
         } else {
             int index = writeAnswerLetter(firstnameLetters);
             Button current_answer_letter = (Button) firstname_layout.getChildAt(index);
             current_answer_letter.setText(firstname.charAt(index)+"");
-
-            //erase random letter
-            //eraseRdmLetterBonus(index, firstname);
         }
         onigiri -=5;
         Log.i("BONUS 5", bonusUsed+"");
@@ -701,14 +700,24 @@ public class GameActivity extends AppCompatActivity {
         }
     }
 
-    public void eraseRdmLetterBonus(int index, String name) {
-        int i = 0;
-        while(i < rdmLettersBtn.size() && !rdmLettersBtn.get(i).getText().equals(name.charAt(index))) {
-            i++;
-        }
-        indexTable.add(nbLettersWritten,i);
-        rdmLettersBtn.get(i).setVisibility(View.INVISIBLE);
-        rdmLettersBtn.get(i).setEnabled(false);
+    public void saveGame() {
+        SharedPreferences preferences = getSharedPreferences(PREFS_NAME, 0);
+        SharedPreferences.Editor editor = preferences.edit();
+
+        editor.putInt("SCORE", score);
+        editor.putInt("PROGRESS", index);
+        editor.putInt("NB_PERSO", nb_persoFounded);
+        editor.putInt("ONIGIRI", onigiri);
+
+        editor.commit();
     }
 
+    public void restoreGame() {
+        // Restore preferences
+        SharedPreferences preferences = getSharedPreferences(PREFS_NAME, 0);
+        score = preferences.getInt("SCORE", 0);
+        index = preferences.getInt("PROGRESS", 0);
+        nb_persoFounded = preferences.getInt("NB_PERSO", 0);
+        onigiri = preferences.getInt("ONIGIRI", 10);
+    }
 }

@@ -111,7 +111,8 @@ public class DbHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor c;
         try {
-            c = db.rawQuery("SELECT * FROM PersoQuestion ORDER BY Random()", null);
+            //c = db.rawQuery("SELECT * FROM PersoQuestion ORDER BY Random()", null);
+            c = db.rawQuery("SELECT * FROM PersoQuestion", null);
             if(c == null) return null;
             c.moveToFirst();
 
