@@ -43,6 +43,7 @@ public class DoneActivity extends AppCompatActivity {
             int perso_total = bundle.getInt("NB_PERSO_TOTAL");
             score_txtView.setText(score + "/" + perso_total*3);
             nb_perso.setText(nb_persoFounded + "/" + perso_total);
+            db.insertScore(score);
         }
 
         retry_btn.setOnClickListener(new View.OnClickListener() {
@@ -70,5 +71,6 @@ public class DoneActivity extends AppCompatActivity {
         editor.remove("SCORE");
         editor.remove("PROGRESS");
         editor.remove("NB_PERSO");
+        editor.commit();
     }
 }

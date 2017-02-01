@@ -25,16 +25,17 @@
         <View
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="0.5"/>
+            android:layout_weight="0.25"/>
 
         <TextView
             android:id="@+id/score"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:textSize="20sp"
-            android:text="0"
-            android:layout_weight="0.5"
+            android:text="999"
+            android:layout_weight="0.75"
             android:layout_gravity="center"
+            android:gravity="right"
             android:textColor="#FFFFFF"/>
 
         <ImageView

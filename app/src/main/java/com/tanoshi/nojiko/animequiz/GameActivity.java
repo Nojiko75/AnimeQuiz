@@ -21,7 +21,6 @@ import android.widget.TextView;
 
 import com.tanoshi.nojiko.animequiz.dbHelper.DbHelper;
 import com.tanoshi.nojiko.animequiz.model.PersoQuestion;
-import com.tanoshi.nojiko.animequiz.model.Ranking;
 
 import java.io.FileOutputStream;
 import java.io.InputStream;
@@ -48,7 +47,6 @@ public class GameActivity extends AppCompatActivity {
     private TextView score_txtview;
 
     private List<PersoQuestion> persoQuestionList = new ArrayList<>();
-    private List<Ranking> rankingList = new ArrayList<>();
     private DbHelper db;
     private int index = 0;
     private int totalPerso;
