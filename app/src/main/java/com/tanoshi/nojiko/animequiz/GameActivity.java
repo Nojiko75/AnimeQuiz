@@ -18,6 +18,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.tanoshi.nojiko.animequiz.dbHelper.DbHelper;
 import com.tanoshi.nojiko.animequiz.model.PersoQuestion;
@@ -71,6 +72,8 @@ public class GameActivity extends AppCompatActivity {
     private int score = 0;
     private boolean bonusUsed = false;
     private int nb_persoFounded = 0;
+    private HashMap<Integer, String> bonusLettersL = new HashMap<>();
+    private HashMap<Integer, String> bonusLettersF = new HashMap<>();
 
     public static final String PREFS_NAME = "SaveGame";
 
@@ -139,6 +142,10 @@ public class GameActivity extends AppCompatActivity {
 
         Log.i("BONUS 1", bonusUsed+"");
         showGame(index);
+        updateBonusBtn();
+        if(onigiri < 0) {
+            onigiri = 0;
+        }
         Log.i("BONUS 2", bonusUsed+"");
         cpt_index.setText((index+1) + "/"+ totalPerso);
         nb_onigiri.setText(onigiri+"");
@@ -190,10 +197,10 @@ public class GameActivity extends AppCompatActivity {
             //firstname = "";
             firstname = persoQuestion.getFirstName();
             anime = persoQuestion.getAnime();
-
             setAnswerCaseLetters();
             Log.i("LASTNAME", lastname);
             Log.i("FIRSTNAME", firstname);
+
             setAnswer();
             displayRandomLetters();
         }
@@ -353,12 +360,9 @@ public class GameActivity extends AppCompatActivity {
                         Log.e("ANSWER", answer);
                         Log.e("NB EMPTY", writeAnswerLetter(lastnameLetters) + "");
                         Log.i("BONUS 6", bonusUsed+"");
-                        if (checkAnswer()) {
-                            Log.i("CHECK ANSWER", "GOOD");
-                            showSuccessDialog(true);
-                        }
+                        checkAnswer();
                         //} else if(nbLettersWritten <= lastname_layout.getChildCount() + firstname_layout.getChildCount()){
-                    }else {
+                    } else if(isEmpty(firstnameLetters)){
                         //indexTable.add(nbLettersWritten,j);
                         hashMapF.put(writeAnswerLetter(firstnameLetters), j);
                         Log.e("INDEX TABLE", j+"");
@@ -376,10 +380,7 @@ public class GameActivity extends AppCompatActivity {
                             Log.e("BUTTON LETTER 2", (String) current_btn.getText());
                             Log.e("NB LETTER 2", nbLettersWritten+"");
                             Log.e("ANSWER", answer);
-                            if(checkAnswer()) {
-                                Log.i("CHECK ANSWER", "GOOD");
-                                showSuccessDialog(true);
-                            }
+                            checkAnswer();
                         }
                     }
                 }
@@ -475,11 +476,11 @@ public class GameActivity extends AppCompatActivity {
         while (i < list.size() && !TextUtils.isEmpty(list.get(i).getText())) {
             i++;
         }
-
+        Log.i("IS EMPTY", "i: " + i);
         return i < list.size();
     }
 
-    public boolean checkAnswer() {
+    public void checkAnswer() {
         //answer written by the player
         String goodAnswer = lastname+firstname;
         goodAnswer = goodAnswer.replace(" ", "");
@@ -495,7 +496,12 @@ public class GameActivity extends AppCompatActivity {
             playerAnswer += answer_btn.getText();
         }
         Log.i("PLAYER ANSWER", playerAnswer);
-        return (playerAnswer.toLowerCase().equals(goodAnswer.toLowerCase()));
+        if (playerAnswer.toLowerCase().equals(goodAnswer.toLowerCase())) {
+            showSuccessDialog(true);
+        } else if(playerAnswer.length() == goodAnswer.length()) {
+            Toast toast = Toast.makeText(getApplicationContext(), "Mauvaise réponse", Toast.LENGTH_SHORT);
+            toast.show();
+        }
     }
 
     public void eraseAnswerCase() {
@@ -662,6 +668,7 @@ public class GameActivity extends AppCompatActivity {
             int index = writeAnswerLetter(lastnameLetters);
             Button current_answer_letter = (Button) lastname_layout.getChildAt(index);
             current_answer_letter.setText(lastname.charAt(index)+"");
+            bonusLettersL.put(index, lastname.charAt(index)+"");
         } else {
             int index = writeAnswerLetter(firstnameLetters);
             Button current_answer_letter = (Button) firstname_layout.getChildAt(index);
@@ -670,10 +677,7 @@ public class GameActivity extends AppCompatActivity {
         onigiri -=5;
         Log.i("BONUS 5", bonusUsed+"");
         nb_onigiri.setText(onigiri+"");
-        if(checkAnswer()) {
-            Log.i("CHECK ANSWER", "GOOD");
-            showSuccessDialog(true);
-        }
+        checkAnswer();
     }
 
     public void updateBonusBtn() {
