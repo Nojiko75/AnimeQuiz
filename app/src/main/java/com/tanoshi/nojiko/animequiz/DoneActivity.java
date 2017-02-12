@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -49,6 +50,8 @@ public class DoneActivity extends AppCompatActivity {
         retry_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.i("DoneActivity", "RETRY");
+                restartGame();
                 Intent intent = new Intent(getApplicationContext(), GameActivity.class);
                 startActivity(intent);
                 finish();
@@ -58,13 +61,16 @@ public class DoneActivity extends AppCompatActivity {
         back_home_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.i("DoneActivity", "BACK");
+                restartGame();
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(intent);
                 finish();
             }
         });
+    }
 
-        //restart game
+    public void restartGame() {
         SharedPreferences preferences = getSharedPreferences(PREFS_NAME, 0);
         SharedPreferences.Editor editor = preferences.edit();
 
@@ -72,5 +78,6 @@ public class DoneActivity extends AppCompatActivity {
         editor.remove("PROGRESS");
         editor.remove("NB_PERSO");
         editor.commit();
+        preferences.getInt("SCORE", 0);
     }
 }

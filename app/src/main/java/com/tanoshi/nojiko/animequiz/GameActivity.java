@@ -673,6 +673,7 @@ public class GameActivity extends AppCompatActivity {
             int index = writeAnswerLetter(firstnameLetters);
             Button current_answer_letter = (Button) firstname_layout.getChildAt(index);
             current_answer_letter.setText(firstname.charAt(index)+"");
+            bonusLettersF.put(index, firstname.charAt(index)+"");
         }
         onigiri -=5;
         Log.i("BONUS 5", bonusUsed+"");
