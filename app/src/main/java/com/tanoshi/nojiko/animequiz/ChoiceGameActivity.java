@@ -9,6 +9,7 @@ import android.widget.Button;
 
 public class ChoiceGameActivity extends AppCompatActivity {
 
+    private Button easy_persoquiz_btn;
     private Button hard_persoquiz_btn;
 
     @Override
@@ -19,7 +20,16 @@ public class ChoiceGameActivity extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.hide();
 
+        this.easy_persoquiz_btn = (Button) findViewById(R.id.easy_persoquiz_btn);
         this.hard_persoquiz_btn = (Button) findViewById(R.id.hard_persoquiz_btn);
+
+        this.easy_persoquiz_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), EasyPersoQuizActivity.class);
+                startActivity(intent);
+            }
+        });
 
         this.hard_persoquiz_btn.setOnClickListener(new View.OnClickListener() {
             @Override

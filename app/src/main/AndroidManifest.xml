@@ -18,7 +18,8 @@
         <activity android:name=".GameActivity" />
         <activity android:name=".RankingActivity" />
         <activity android:name=".DoneActivity" />
-        <activity android:name=".ChoiceGameActivity"></activity>
+        <activity android:name=".ChoiceGameActivity" />
+        <activity android:name=".EasyPersoQuizActivity"></activity>
     </application>
 
 </manifest>

@@ -8,5 +8,6 @@
     <color name="orangeBtn">#FF5B2B</color>
     <color name="greenBtn">#8FCF3C</color>
     <color name="enabledBtn">#AED083</color>
+    <color name="persoName">#4BB5C1</color>
     <color name="backgroundPage">#1F2A36</color> <!-- #242E38 -->
 </resources>
