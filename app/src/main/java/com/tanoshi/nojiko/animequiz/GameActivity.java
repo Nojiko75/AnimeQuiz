@@ -9,7 +9,6 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutCompat;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -222,9 +221,9 @@ public class GameActivity extends AppCompatActivity {
             int nbLettersLN = lastname.length();
             int nbLettersFN = firstname.length();
 
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(130, LinearLayoutCompat.LayoutParams.WRAP_CONTENT);
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(130, 200);
             params.setMargins(4, 0, 4, 0); //left, top, right, bottom
-            LinearLayout.LayoutParams params_space = new LinearLayout.LayoutParams(130, LinearLayoutCompat.LayoutParams.WRAP_CONTENT);
+            LinearLayout.LayoutParams params_space = new LinearLayout.LayoutParams(130, 200);
             params_space.setMargins(4, 0, 134, 0); //left, top, right, bottom
             Log.i("SIZE", nbLettersLN+"");
             for(int i=0; i<nbLettersLN; i++) {
