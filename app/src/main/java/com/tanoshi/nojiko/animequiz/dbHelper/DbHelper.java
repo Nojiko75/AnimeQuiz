@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import com.tanoshi.nojiko.animequiz.model.EasyPersoQuestion;
 import com.tanoshi.nojiko.animequiz.model.PersoQuestion;
 import com.tanoshi.nojiko.animequiz.model.Ranking;
 
@@ -136,6 +137,34 @@ public class DbHelper extends SQLiteOpenHelper {
         }
         db.close();
         return listPersoQuestion;
+    }
+
+    public List<EasyPersoQuestion> getAllEasyPersoQuestion() {
+        List<EasyPersoQuestion> listEasyPersoQuestion = new ArrayList<>();
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor c;
+        try {
+            c = db.rawQuery("SELECT * FROM EasyPersoQuestion", null);
+            if(c == null) return null;
+            c.moveToFirst();
+
+            do{
+                int id = c.getInt(c.getColumnIndex("Id"));
+                String goodAnswer = c.getString(c.getColumnIndex("GoodAnswer"));
+                String image = c.getString(c.getColumnIndex("Image"));
+                String answerA = c.getString(c.getColumnIndex("AnswerA"));
+                String answerB = c.getString(c.getColumnIndex("AnswerB"));
+                String answerC = c.getString(c.getColumnIndex("AnswerC"));
+
+                EasyPersoQuestion easyPersoQuestion = new EasyPersoQuestion(id, goodAnswer, image, answerA, answerB, answerC);
+                listEasyPersoQuestion.add(easyPersoQuestion);
+            }while(c.moveToNext());
+            c.close();
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+        db.close();
+        return listEasyPersoQuestion;
     }
 
     //Insert Score to Ranking Table

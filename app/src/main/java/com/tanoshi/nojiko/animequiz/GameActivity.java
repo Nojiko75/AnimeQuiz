@@ -11,6 +11,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -65,7 +66,6 @@ public class GameActivity extends AppCompatActivity {
     private List<Button> answerLetters = new ArrayList<>();
     private List<Button> lastnameLetters = new ArrayList<>();
     private List<Button> firstnameLetters = new ArrayList<>();
-    private List<Button> nameLetters = new ArrayList<>();
     private String answer = "";
     private int onigiri = 10;
     private int score = 0;
@@ -139,16 +139,16 @@ public class GameActivity extends AppCompatActivity {
         persoQuestionList = db.getAllPersoQuestion();
         totalPerso = persoQuestionList.size();
 
-        Log.i("BONUS 1", bonusUsed+"");
+        Log.i("BONUS 1", bonusUsed + "");
         showGame(index);
         updateBonusBtn();
         if(onigiri < 0) {
             onigiri = 0;
         }
         Log.i("BONUS 2", bonusUsed+"");
-        cpt_index.setText((index+1) + "/"+ totalPerso);
-        nb_onigiri.setText(onigiri+"");
-        score_txtview.setText(score+"");
+        cpt_index.setText((index + 1) + "/" + totalPerso);
+        nb_onigiri.setText(onigiri + "");
+        score_txtview.setText(score + "");
     }
 
     public boolean copyDataBase(Context context) {
@@ -221,6 +221,7 @@ public class GameActivity extends AppCompatActivity {
             int nbLettersLN = lastname.length();
             int nbLettersFN = firstname.length();
 
+            LayoutInflater inflater = getLayoutInflater();
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(130, 200);
             params.setMargins(4, 0, 4, 0); //left, top, right, bottom
             LinearLayout.LayoutParams params_space = new LinearLayout.LayoutParams(130, 200);
@@ -228,12 +229,12 @@ public class GameActivity extends AppCompatActivity {
             Log.i("SIZE", nbLettersLN+"");
             for(int i=0; i<nbLettersLN; i++) {
                 if(!Character.toString(lastname.charAt(i)).matches(" ")) {
-                    Button myButton = new Button(this);
+                    Button myButton = (Button) inflater.inflate(R.layout.answer_letters, lastname_layout, false);
                     //String s = String.valueOf(lastname.charAt(i));
                     //myButton.setText(s);
                     myButton.setText("");
-                    myButton.setTextSize(20);
-                    myButton.setTextColor(Color.parseColor("#ffffff"));
+                    //myButton.setTextSize(20);
+                    //myButton.setTextColor(Color.parseColor("#ffffff"));
 
                     if(i < nbLettersLN-1 && Character.toString(lastname.charAt(i+1)).matches(" ")) {
                         //myButton.setBackgroundColor(Color.parseColor("#1F2A36"));
@@ -243,29 +244,27 @@ public class GameActivity extends AppCompatActivity {
                         //myButton.setEnabled(false);
 
                     } else {
-                        myButton.setLayoutParams(params);
+                        //myButton.setLayoutParams(params);
                     }
 
-                    myButton.setBackgroundResource(R.drawable.answer_letters);
+                    //myButton.setBackgroundResource(R.drawable.answer_letters);
                     lastname_layout.addView(myButton);
                     lastnameLetters.add(myButton);
-                    nameLetters.add(myButton);
                 }
 
             }
             if(nbLettersFN > 0) {
                 for(int i=0; i<nbLettersFN; i++) {
-                    Button myButton = new Button(this);
+                    Button myButton = (Button) inflater.inflate(R.layout.answer_letters, firstname_layout, false);
                     //String s = String.valueOf(firstname.charAt(i));
                     //myButton.setText(s);
                     myButton.setText("");
-                    myButton.setTextSize(20);
+                    /*myButton.setTextSize(20);
                     myButton.setTextColor(Color.parseColor("#ffffff"));
                     myButton.setBackgroundResource(R.drawable.answer_letters);
-                    myButton.setLayoutParams(params);
+                    myButton.setLayoutParams(params);*/
                     firstname_layout.addView(myButton);
                     firstnameLetters.add(myButton);
-                    nameLetters.add(myButton);
                 }
             }
 
@@ -556,6 +555,7 @@ public class GameActivity extends AppCompatActivity {
         final Dialog dialog = new Dialog(this);
         dialog.setContentView(R.layout.success_dialog);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.setCanceledOnTouchOutside(false);
 
         TextView title = (TextView) dialog.findViewById(R.id.title) ;
         TextView result_st = (TextView) dialog.findViewById(R.id.result_st);
@@ -571,7 +571,7 @@ public class GameActivity extends AppCompatActivity {
             result_img.setImageResource(imageResource);
             onigiri-=10;
             nb_onigiri.setText(onigiri+"");
-            cpt_index.setText((index+1) + "/"+ totalPerso);
+            cpt_index.setText((index+1) + "/" + totalPerso);
         }
 
         perso_name.setText(lastname + " " + firstname);
@@ -596,7 +596,7 @@ public class GameActivity extends AppCompatActivity {
                 }
                 ++index;
                 //index += 24;
-                cpt_index.setText((index+1) + "/"+ totalPerso);
+                cpt_index.setText((index+1) + "/" + totalPerso);
                 bonusUsed = false;
                 if(index < totalPerso) {
                     showGame(index);

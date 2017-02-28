@@ -96,7 +96,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="5"
-        android:layout_marginTop="20dp">
+        android:layout_marginTop="10dp">
 
         <RelativeLayout
             android:layout_width="wrap_content"
@@ -106,8 +106,8 @@
 
             <ImageView
                 android:id="@+id/perso_img"
-                android:layout_width="220dp"
-                android:layout_height="220dp"
+                android:layout_width="200dp"
+                android:layout_height="200dp"
                 android:src="@drawable/akame"
                 android:layout_centerHorizontal="true"
                 android:padding="10dp"/>
@@ -125,7 +125,7 @@
         <Button
             android:id="@+id/clueBonus_btn"
             android:layout_width="wrap_content"
-            android:layout_height="50dp"
+            android:layout_height="40dp"
             android:text="Indice"
             android:textColor="#FFFFFF"
             android:drawableLeft="@drawable/clue"
@@ -138,7 +138,7 @@
         <Button
             android:id="@+id/nextBonus_btn"
             android:layout_width="wrap_content"
-            android:layout_height="50dp"
+            android:layout_height="40dp"
             android:text="Passer"
             android:textColor="#FFFFFF"
             android:layout_marginLeft="5dp"
@@ -167,7 +167,8 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:gravity="center"
-                android:layout_marginBottom="5dp">
+                android:layout_marginTop="4dp"
+                android:weightSum="10">
 
             </LinearLayout>
 
@@ -177,7 +178,8 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:gravity="center"
-                android:layout_below="@+id/lastname_layout">
+                android:layout_below="@+id/lastname_layout"
+                android:weightSum="10">
 
             </LinearLayout>
         </LinearLayout>

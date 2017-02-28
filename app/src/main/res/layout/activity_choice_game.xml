@@ -7,21 +7,38 @@
     android:orientation="vertical"
     android:background="@color/backgroundPage">
     <LinearLayout
+        android:id="@+id/header_ranking"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:orientation="horizontal"
         android:background="#C20000"
+        android:weightSum="5"
         android:gravity="center">
+
+        <ImageButton
+            android:id="@+id/back_btn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:src="@drawable/back"
+            android:layout_weight="1"
+            android:background="@null"
+            android:layout_gravity="center" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="AnimeQuiz"
             android:textSize="24sp"
-            android:layout_gravity="center"
+            android:gravity="center"
             android:textColor="#FFFFFF"
             android:textStyle="bold"
+            android:layout_weight="3"
             />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"/>
 
     </LinearLayout>
 
@@ -65,33 +82,52 @@
             android:gravity="center"
             android:background="@drawable/perso_quiz_bkg"
             android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp">
+            android:layout_marginRight="20dp"
+            android:weightSum="3">
 
             <Button
                 android:id="@+id/easy_persoquiz_btn"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="1"
                 android:layout_height="wrap_content"
+                android:padding="10dp"
                 android:background="@drawable/ok_btn"
-                android:layout_margin="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="4dp"
                 android:textColor="#FFFFFF"
+                android:textSize="13sp"
                 android:text="Facile"/>
 
             <Button
                 android:id="@+id/medium_persoquiz_btn"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="1"
                 android:layout_height="wrap_content"
+                android:padding="10dp"
                 android:background="@drawable/orange_btn"
-                android:layout_margin="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="4dp"
+                android:layout_marginRight="4dp"
                 android:textColor="#FFFFFF"
+                android:textSize="13sp"
                 android:text="Moyen"/>
 
             <Button
                 android:id="@+id/hard_persoquiz_btn"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="1"
                 android:layout_height="wrap_content"
+                android:padding="10dp"
                 android:background="@drawable/close_btn"
-                android:layout_margin="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="4dp"
+                android:layout_marginRight="10dp"
                 android:textColor="#FFFFFF"
+                android:textSize="13sp"
                 android:text="Difficile"/>
         </LinearLayout>
     </LinearLayout>
@@ -135,33 +171,52 @@
             android:gravity="center"
             android:background="@drawable/manga_quiz_bkg"
             android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp">
+            android:layout_marginRight="20dp"
+            android:weightSum="3">
 
             <Button
                 android:id="@+id/easy_mangaquiz_btn"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="1"
                 android:layout_height="wrap_content"
+                android:padding="10dp"
                 android:background="@drawable/ok_btn"
-                android:layout_margin="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="4dp"
                 android:textColor="#FFFFFF"
+                android:textSize="13sp"
                 android:text="Facile"/>
 
             <Button
                 android:id="@+id/medium_mangaquiz_btn"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="1"
                 android:layout_height="wrap_content"
+                android:padding="10dp"
                 android:background="@drawable/orange_btn"
-                android:layout_margin="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="4dp"
+                android:layout_marginRight="4dp"
                 android:textColor="#FFFFFF"
+                android:textSize="13sp"
                 android:text="Moyen"/>
 
             <Button
                 android:id="@+id/hard_mangaquiz_btn"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="1"
                 android:layout_height="wrap_content"
+                android:padding="10dp"
                 android:background="@drawable/close_btn"
-                android:layout_margin="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="4dp"
+                android:layout_marginRight="10dp"
                 android:textColor="#FFFFFF"
+                android:textSize="13sp"
                 android:text="Difficile"/>
         </LinearLayout>
     </LinearLayout>
@@ -205,33 +260,52 @@
             android:gravity="center"
             android:background="@drawable/culture_quiz_bkg"
             android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp">
+            android:layout_marginRight="20dp"
+            android:weightSum="3">
 
             <Button
                 android:id="@+id/easy_culturequiz_btn"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="1"
                 android:layout_height="wrap_content"
+                android:padding="10dp"
                 android:background="@drawable/ok_btn"
-                android:layout_margin="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="4dp"
                 android:textColor="#FFFFFF"
+                android:textSize="13sp"
                 android:text="Facile"/>
 
             <Button
                 android:id="@+id/medium_culturequiz_btn"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="1"
                 android:layout_height="wrap_content"
+                android:padding="10dp"
                 android:background="@drawable/orange_btn"
-                android:layout_margin="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="4dp"
+                android:layout_marginRight="4dp"
                 android:textColor="#FFFFFF"
+                android:textSize="13sp"
                 android:text="Moyen"/>
 
             <Button
                 android:id="@+id/hard_culturequiz_btn"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="1"
                 android:layout_height="wrap_content"
+                android:padding="10dp"
                 android:background="@drawable/close_btn"
-                android:layout_margin="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="4dp"
+                android:layout_marginRight="10dp"
                 android:textColor="#FFFFFF"
+                android:textSize="13sp"
                 android:text="Difficile"/>
         </LinearLayout>
     </LinearLayout>
