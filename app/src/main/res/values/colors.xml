@@ -9,5 +9,6 @@
     <color name="greenBtn">#8FCF3C</color>
     <color name="enabledBtn">#AED083</color>
     <color name="persoName">#4BB5C1</color>
+    <color name="qcmBtn">#5EB6DD</color>
     <color name="backgroundPage">#1F2A36</color> <!-- #242E38 -->
 </resources>

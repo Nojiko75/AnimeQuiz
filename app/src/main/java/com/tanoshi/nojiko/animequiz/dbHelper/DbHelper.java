@@ -2,16 +2,20 @@ package com.tanoshi.nojiko.animequiz.dbHelper;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.tanoshi.nojiko.animequiz.model.EasyPersoQuestion;
+import com.tanoshi.nojiko.animequiz.model.MediumPersoQuestion;
 import com.tanoshi.nojiko.animequiz.model.PersoQuestion;
 import com.tanoshi.nojiko.animequiz.model.Ranking;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -28,6 +32,8 @@ public class DbHelper extends SQLiteOpenHelper {
     public static String DB_PATH = "/data/data/com.tanoshi.nojiko.animequiz/databases/";
     private SQLiteDatabase mDataBase;
     private Context mContext;
+    private static final int DATABASE_VERSION = 2;
+    private static final String SP_KEY_DB_VER = "db_ver";
 
     public DbHelper(Context context) {
         super(context, DB_NAME, null, 1);
@@ -35,6 +41,7 @@ public class DbHelper extends SQLiteOpenHelper {
         Log.e("DBPATH", DB_PATH+DB_NAME);
         //openDataBase();
         this.mContext = context;
+        initialize();
     }
 
     public void openDataBase() {
@@ -87,6 +94,39 @@ public class DbHelper extends SQLiteOpenHelper {
                 e.printStackTrace();
             }
         }
+    }
+
+    /**
+     * Initializes database. Creates database if doesn't exist.
+     */
+    private void initialize() {
+        if (databaseExists()) {
+            SharedPreferences prefs = PreferenceManager
+                    .getDefaultSharedPreferences(mContext);
+            int dbVersion = prefs.getInt(SP_KEY_DB_VER, 1);
+            if (DATABASE_VERSION != dbVersion) {
+                File dbFile = mContext.getDatabasePath(DB_NAME);
+                if (!dbFile.delete()) {
+                    Log.w("DB", "Unable to update database");
+                }
+            }
+        }
+        if (!databaseExists()) {
+            try {
+                createDataBase();
+            }catch (IOException e) {
+                Log.i("DB", "error: " + e);
+            }
+        }
+    }
+
+    /**
+     * Returns true if database file exists, false otherwise.
+     * @return
+     */
+    private boolean databaseExists() {
+        File dbFile = mContext.getDatabasePath(DB_NAME);
+        return dbFile.exists();
     }
 
     @Override
@@ -165,6 +205,34 @@ public class DbHelper extends SQLiteOpenHelper {
         }
         db.close();
         return listEasyPersoQuestion;
+    }
+
+    public List<MediumPersoQuestion> getAllMediumPersoQuestion() {
+        List<MediumPersoQuestion> listMediumPersoQuestion = new ArrayList<>();
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor c;
+        try {
+            c = db.rawQuery("SELECT * FROM MediumPersoQuestion", null);
+            if(c == null) return null;
+            c.moveToFirst();
+
+            do{
+                int id = c.getInt(c.getColumnIndex("Id"));
+                String goodAnswer = c.getString(c.getColumnIndex("GoodAnswer"));
+                String image = c.getString(c.getColumnIndex("Image"));
+                String answerA = c.getString(c.getColumnIndex("AnswerA"));
+                String answerB = c.getString(c.getColumnIndex("AnswerB"));
+                String answerC = c.getString(c.getColumnIndex("AnswerC"));
+
+                MediumPersoQuestion mediumPersoQuestion = new MediumPersoQuestion(id, goodAnswer, image, answerA, answerB, answerC);
+                listMediumPersoQuestion.add(mediumPersoQuestion);
+            }while(c.moveToNext());
+            c.close();
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+        db.close();
+        return listMediumPersoQuestion;
     }
 
     //Insert Score to Ranking Table

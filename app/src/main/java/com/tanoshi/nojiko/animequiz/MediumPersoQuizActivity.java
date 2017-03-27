@@ -9,31 +9,31 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.tanoshi.nojiko.animequiz.dbHelper.DbHelper;
-import com.tanoshi.nojiko.animequiz.model.EasyPersoQuestion;
+import com.tanoshi.nojiko.animequiz.model.MediumPersoQuestion;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class EasyPersoQuizActivity extends AppCompatActivity {
+public class MediumPersoQuizActivity extends AppCompatActivity {
 
     private ImageButton back_btn;
-    private TextView perso_name;
     private TextView cpt_index;
     private TextView nb_onigiri;
     private Button clueBonus_btn;
     private Button nextBonus_btn;
     private TextView score_txtview;
-    private ImageView perso_answerA;
-    private ImageView perso_answerB;
-    private ImageView perso_answerC;
-    private ImageView perso_answerD;
+    private ImageView perso_img;
+    private String goodAnswer = "";
+    private Button answerA;
+    private Button answerB;
+    private Button answerC;
+    private Button answerD;
 
-    private List<EasyPersoQuestion> easyPersoQuestionList = new ArrayList<>();
+    private List<MediumPersoQuestion> mediumPersoQuestionList = new ArrayList<>();
     private DbHelper db;
     private int index = 0;
     private int totalPerso;
@@ -42,15 +42,12 @@ public class EasyPersoQuizActivity extends AppCompatActivity {
     private boolean bonusUsed = false;
     private int nb_persoFounded = 0;
 
-    private String goodAnswer = "";
-
-    List<ImageView> answers_img = new ArrayList<>();
-
+    List<Button> answers_btn = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_easy_perso_quiz);
+        setContentView(R.layout.activity_medium_perso_quiz);
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.hide();
@@ -61,15 +58,16 @@ public class EasyPersoQuizActivity extends AppCompatActivity {
         this.score_txtview = (TextView) findViewById(R.id.score);
         this.cpt_index = (TextView) findViewById(R.id.index);
         this.nb_onigiri = (TextView) findViewById(R.id.nb_onigiri);
-        this.perso_name = (TextView) findViewById(R.id.perso_name);
 
         this.clueBonus_btn = (Button) findViewById(R.id.clueBonus_btn);
         this.nextBonus_btn = (Button) findViewById(R.id.nextBonus_btn);
 
-        this.perso_answerA = (ImageView) findViewById(R.id.perso_answerA);
-        this.perso_answerB = (ImageView) findViewById(R.id.perso_answerB);
-        this.perso_answerC = (ImageView) findViewById(R.id.perso_answerC);
-        this.perso_answerD = (ImageView) findViewById(R.id.perso_answerD);
+        this.perso_img = (ImageView) findViewById(R.id.perso_img);
+
+        this.answerA = (Button) findViewById(R.id.answerA);
+        this.answerB = (Button) findViewById(R.id.answerB);
+        this.answerC = (Button) findViewById(R.id.answerC);
+        this.answerD = (Button) findViewById(R.id.answerD);
 
         this.back_btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -78,13 +76,13 @@ public class EasyPersoQuizActivity extends AppCompatActivity {
             }
         });
 
-        answers_img.add(perso_answerA);
-        answers_img.add(perso_answerB);
-        answers_img.add(perso_answerC);
-        answers_img.add(perso_answerD);
+        this.answers_btn.add(this.answerA);
+        this.answers_btn.add(this.answerB);
+        this.answers_btn.add(this.answerC);
+        this.answers_btn.add(this.answerD);
 
-        this.easyPersoQuestionList = db.getAllEasyPersoQuestion();
-        totalPerso = easyPersoQuestionList.size();
+        this.mediumPersoQuestionList = db.getAllMediumPersoQuestion();
+        totalPerso = mediumPersoQuestionList.size();
 
         showGame(index);
         cpt_index.setText((index + 1) + "/" + totalPerso);
@@ -95,42 +93,40 @@ public class EasyPersoQuizActivity extends AppCompatActivity {
 
     private void showGame(int index) {
         if(index < totalPerso) {
-            EasyPersoQuestion easyPersoQuestion = easyPersoQuestionList.get(index);
-            goodAnswer = easyPersoQuestion.getImage();
-            this.perso_name.setText(easyPersoQuestion.getGoodAnswer());
-            String[] answers = {easyPersoQuestion.getImage(),
-                                easyPersoQuestion.getAnswerB(),
-                                easyPersoQuestion.getAnswerC(),
-                                easyPersoQuestion.getAnswerD()};
+            MediumPersoQuestion mediumPersoQuestion = mediumPersoQuestionList.get(index);
+            int imageId = this.getResources().getIdentifier(mediumPersoQuestion.getImage().toLowerCase(), "drawable", getPackageName());
+            perso_img.setImageResource(imageId);
+            this.goodAnswer = mediumPersoQuestion.getGoodAnswer();
+            String[] answers = {this.goodAnswer,
+                    mediumPersoQuestion.getAnswerA(),
+                    mediumPersoQuestion.getAnswerB(),
+                    mediumPersoQuestion.getAnswerC()};
 
             shuffleAnswerArray(answers);
-            for(int i=0; i< answers.length; i++) {
-                int id = this.getResources().getIdentifier(answers[i].toLowerCase(), "drawable", getPackageName());
-                answers_img.get(i).setImageResource(id);
-                answers_img.get(i).setTag(answers[i]);
+            for(int i=0; i<this.answers_btn.size(); i++) {
+                this.answers_btn.get(i).setText(answers[i]);
             }
         }
     }
 
     public void checkAnswer() {
-        for(int i=0; i < answers_img.size(); i++) {
-            final ImageView current_img = answers_img.get(i);
-            current_img.setOnClickListener(new View.OnClickListener() {
+        for(int i=0; i < this.answers_btn.size(); i++) {
+            final Button current_btn = answers_btn.get(i);
+            current_btn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     int answer_color = 0;
-                    if(goodAnswer.equals(current_img.getTag())) {
-                        answer_color = R.drawable.good_answer;
+                    if(goodAnswer.equals(current_btn.getText())) {
+                        answer_color = R.drawable.qcm_good_answer_btn;
                         onigiri +=5;
                         nb_onigiri.setText(onigiri+"");
                         score += 3;
                         score_txtview.setText(score+"");
                         nb_persoFounded++;
                     } else {
-                        answer_color = R.drawable.wrong_answer;
+                        answer_color = R.drawable.qcm_wrong_answer_btn;
                     }
-                    final RelativeLayout layout = (RelativeLayout) current_img.getParent();
-                    layout.setBackgroundResource(answer_color);
+                    current_btn.setBackgroundResource(answer_color);
                     Handler handler = new Handler();
                     handler.postDelayed(new Runnable() {
                         @Override
@@ -138,7 +134,7 @@ public class EasyPersoQuizActivity extends AppCompatActivity {
                             if(index+1 < totalPerso) {
                                 showGame(++index);
                                 cpt_index.setText((index+1) + "/"+ totalPerso);
-                                layout.setBackgroundResource(R.drawable.img_bkg);
+                                current_btn.setBackgroundResource(R.drawable.qcm_btn);
                             } else {
                                 Intent intent = new Intent(getApplicationContext(), DoneActivity.class);
                                 intent.putExtra("SCORE", score);
@@ -155,7 +151,6 @@ public class EasyPersoQuizActivity extends AppCompatActivity {
         }
     }
 
-    // Implementing Fisher–Yates shuffle
     static void shuffleAnswerArray(String[] ar)
     {
         Random rnd = new Random();

@@ -11,6 +11,7 @@ import android.widget.ImageButton;
 public class ChoiceGameActivity extends AppCompatActivity {
 
     private Button easy_persoquiz_btn;
+    private Button medium_persoquiz_btn;
     private Button hard_persoquiz_btn;
 
     private ImageButton back_btn;
@@ -24,6 +25,7 @@ public class ChoiceGameActivity extends AppCompatActivity {
         actionBar.hide();
 
         this.easy_persoquiz_btn = (Button) findViewById(R.id.easy_persoquiz_btn);
+        this.medium_persoquiz_btn = (Button) findViewById(R.id.medium_persoquiz_btn);
         this.hard_persoquiz_btn = (Button) findViewById(R.id.hard_persoquiz_btn);
 
         this.back_btn = (ImageButton) findViewById(R.id.back_btn);
@@ -32,6 +34,14 @@ public class ChoiceGameActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), EasyPersoQuizActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        this.medium_persoquiz_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), MediumPersoQuizActivity.class);
                 startActivity(intent);
             }
         });
