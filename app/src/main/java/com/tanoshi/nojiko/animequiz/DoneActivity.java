@@ -18,6 +18,7 @@ public class DoneActivity extends AppCompatActivity {
     private TextView score_txtView;
     private Button retry_btn;
     private Button back_home_btn;
+    private String level;
 
     public static final String PREFS_NAME = "SaveGame";
 
@@ -38,10 +39,14 @@ public class DoneActivity extends AppCompatActivity {
 
         //Get data from GameActivity
         Bundle bundle = getIntent().getExtras();
+        Log.i("LEVEL 0", bundle.getString("LEVEL"));
         if(bundle != null) {
             int score = bundle.getInt("SCORE");
             int nb_persoFounded = bundle.getInt("NB_PERSO");
             int perso_total = bundle.getInt("NB_PERSO_TOTAL");
+            level = bundle.getString("LEVEL");
+            Log.i("LEVEL 1", bundle.getString("LEVEL"));
+            Log.i("LEVEL 2", level);
             score_txtView.setText(score + "/" + perso_total*3);
             nb_perso.setText(nb_persoFounded + "/" + perso_total);
             db.insertScore(score);
@@ -50,10 +55,16 @@ public class DoneActivity extends AppCompatActivity {
         retry_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.i("LEVEL 3", level);
                 Log.i("DoneActivity", "RETRY");
+                if(level.equals("EasyPersoQuizActivity")) {
+                    startActivity(new Intent(getApplicationContext(), EasyPersoQuizActivity.class));
+                } else if(level.equals("MediumPersoQuizActivity")) {
+                    startActivity(new Intent(getApplicationContext(), MediumPersoQuizActivity.class));
+                } else if(level.equals("GameActivity")) {
+                    startActivity(new Intent(getApplicationContext(), GameActivity.class));
+                }
                 restartGame();
-                Intent intent = new Intent(getApplicationContext(), GameActivity.class);
-                startActivity(intent);
                 finish();
             }
         });

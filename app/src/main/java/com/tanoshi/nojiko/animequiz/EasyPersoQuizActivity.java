@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -77,7 +78,7 @@ public class EasyPersoQuizActivity extends AppCompatActivity {
                 finish();
             }
         });
-
+        Log.i("LEVEL: ", this.getClass().getSimpleName());
         answers_img.add(perso_answerA);
         answers_img.add(perso_answerB);
         answers_img.add(perso_answerC);
@@ -141,9 +142,12 @@ public class EasyPersoQuizActivity extends AppCompatActivity {
                                 layout.setBackgroundResource(R.drawable.img_bkg);
                             } else {
                                 Intent intent = new Intent(getApplicationContext(), DoneActivity.class);
+                                String level = this.getClass().getSimpleName();
                                 intent.putExtra("SCORE", score);
                                 intent.putExtra("NB_PERSO", nb_persoFounded);
                                 intent.putExtra("NB_PERSO_TOTAL", totalPerso);
+                                intent.putExtra("LEVEL", "EasyPersoQuizActivity");
+                                Log.i("LEVEL intent", level);
                                 startActivity(intent);
                                 finish();
                             }

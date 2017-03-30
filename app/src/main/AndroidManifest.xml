@@ -8,19 +8,19 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity android:name=".MainActivity" android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".GameActivity" />
-        <activity android:name=".RankingActivity" />
-        <activity android:name=".DoneActivity" />
-        <activity android:name=".ChoiceGameActivity" />
-        <activity android:name=".EasyPersoQuizActivity" />
-        <activity android:name=".MediumPersoQuizActivity"></activity>
+        <activity android:name=".GameActivity" android:screenOrientation="portrait" />
+        <activity android:name=".RankingActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".DoneActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".ChoiceGameActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".EasyPersoQuizActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".MediumPersoQuizActivity" android:screenOrientation="portrait"></activity>
     </application>
 
 </manifest>

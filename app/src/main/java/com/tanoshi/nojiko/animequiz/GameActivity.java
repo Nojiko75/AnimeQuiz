@@ -605,6 +605,7 @@ public class GameActivity extends AppCompatActivity {
                     intent.putExtra("SCORE", score);
                     intent.putExtra("NB_PERSO", nb_persoFounded);
                     intent.putExtra("NB_PERSO_TOTAL", totalPerso);
+                    intent.putExtra("LEVEL", "GameActivity");
                     startActivity(intent);
                     finish();
                 }
